@@ -8,7 +8,7 @@ body{
 .flux {
     border: solid 1px black;
     overflow: auto; 
-    height: 400px;
+    height: 500px;
     padding: 10px
 }
 
@@ -23,10 +23,6 @@ body{
 }
 
 
-.nonLu{
+.notRead{
     background-color: lightgray;
-}
-
-.lu{
-    background-color: pink;
 }

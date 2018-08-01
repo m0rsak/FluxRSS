@@ -5,7 +5,6 @@ class ElementsController < ApplicationController
         @element.toggle(:status).save
        
         return @element
-
     end
 
 

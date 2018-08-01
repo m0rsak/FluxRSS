@@ -13,7 +13,6 @@
 </div>
 <% end %>
 
-
 <% if @fluxes %>
 <div class="container-fluid">
   <div class="row" >
@@ -22,7 +21,7 @@
       <p><%= flux.title %></p>
       <div class="flux">  
         <% flux.elements.each do |element| %>
-        <div class="nonLu element">
+        <div id="element_<%= element.id %>" class="notRead element">
           <div class='headFlux'>
             <div>
             <a href='<%= element.url %>'><p><strong><%= element.title %></strong></p></a>
@@ -34,8 +33,7 @@
             </div>
           </div>
             <p><%= raw element.resum %></p>
-            <%= element.status%>
-            <p><%= link_to  "Marqué comme lu", element_changeStatus_path(element.id),  method: :put, remote: true %></p>
+            <p><%= link_to  "Marqué comme lu", element_changeStatus_path(element.id), id: "linkToRead", onClick: "changeStatus(#{element.id},#{element.status});", method: :put, remote: true %></p>
         </div>
         <hr>
         <% end %>
@@ -48,23 +46,18 @@
 
 
 
+<script>
+$(document).ready(function() {
+  <% @fluxes.each do |flux| %>
+    <% flux.elements.each do |element| %>
+      if( <%= element.status %> == true ){
+        $("#element_"+ <%=element.id%>).removeClass("notRead");
+        $("#linkToRead").text("Marqué comme non lu");
 
-
-
-<% if @rss_results %>
-  <% @rss_results.each do |article| %>
-
-  <div class="container-fluid row">
-
-    <div class='col-5 jumbotron'>
-      <a href=”<%= article[:link] %>”><p><strong><%= article[:title] %></strong></p></a>
-      <small>
-      <p style='margin-top:-10px'> 
-          <%= article[:date].strftime('Publié le: %d-%m-%Y') %>
-      </p></small>
-      <p><%= raw article[:description] %></p>
-    </div>
-  </div>
+        }
+     
+    <% end %>
   <% end %>
-<% end %>
-
+  
+});
+</script>
