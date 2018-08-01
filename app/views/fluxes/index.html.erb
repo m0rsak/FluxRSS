@@ -1,0 +1,70 @@
+<%= form_for @flux do |f| %>
+<div class="col-8 offset-4" style='margin-bottom:50px'>
+  <div class='form_group'>
+    <%= f.text_field :title, class: 'form-control', placeholder: 'Titre du Flux' %>
+  </div>
+  <div class="form_group">
+    <%= f.text_field :url, class: 'form-control', placeholder: 'URL du Flux' %>
+  </div>
+  <div class="form_group">
+    <input type="submit" class="btn btn-primary" value='Ajouter le Flux' >
+
+  </div>
+</div>
+<% end %>
+
+
+<% if @fluxes %>
+<div class="container-fluid">
+  <div class="row" >
+    <% @fluxes.each do |flux| %>
+    <div class="col-4" >
+      <p><%= flux.title %></p>
+      <div class="flux">  
+        <% flux.elements.each do |element| %>
+        <div class="nonLu element">
+          <div class='headFlux'>
+            <div>
+            <a href='<%= element.url %>'><p><strong><%= element.title %></strong></p></a>
+            </div>
+            <div>
+              <small>
+                <p><%= element.date.strftime('Publié le: %d-%m-%Y') %></p>
+              </small>
+            </div>
+          </div>
+            <p><%= raw element.resum %></p>
+            <%= element.status%>
+            <p><%= link_to  "Marqué comme lu", element_changeStatus_path(element.id),  method: :put, remote: true %></p>
+        </div>
+        <hr>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+
+
+
+
+
+<% if @rss_results %>
+  <% @rss_results.each do |article| %>
+
+  <div class="container-fluid row">
+
+    <div class='col-5 jumbotron'>
+      <a href=”<%= article[:link] %>”><p><strong><%= article[:title] %></strong></p></a>
+      <small>
+      <p style='margin-top:-10px'> 
+          <%= article[:date].strftime('Publié le: %d-%m-%Y') %>
+      </p></small>
+      <p><%= raw article[:description] %></p>
+    </div>
+  </div>
+  <% end %>
+<% end %>
+
