@@ -13,51 +13,87 @@
 </div>
 <% end %>
 
-<% if @fluxes %>
+<button id="refresh" type="btn btn-primary">Rafraichir</button>
+
 <div class="container-fluid">
-  <div class="row" >
-    <% @fluxes.each do |flux| %>
-    <div class="col-4" >
-      <p><%= flux.title %></p>
-      <div class="flux">  
-        <% flux.elements.each do |element| %>
-        <div id="element_<%= element.id %>" class="notRead element">
-          <div class='headFlux'>
-            <div>
-            <a href='<%= element.url %>'><p><strong><%= element.title %></strong></p></a>
-            </div>
-            <div>
-              <small>
-                <p><%= element.date.strftime('Publié le: %d-%m-%Y') %></p>
-              </small>
-            </div>
-          </div>
-            <p><%= raw element.resum %></p>
-            <p><%= link_to  "Marqué comme lu", element_changeStatus_path(element.id), id: "linkToRead", onClick: "changeStatus(#{element.id},#{element.status});", method: :put, remote: true %></p>
-        </div>
-        <hr>
-        <% end %>
-      </div>
-    </div>
-    <% end %>
+  <div id="content" class="row">
   </div>
 </div>
-<% end %>
-
-
 
 <script>
 $(document).ready(function() {
-  <% @fluxes.each do |flux| %>
-    <% flux.elements.each do |element| %>
-      if( <%= element.status %> == true ){
-        $("#element_"+ <%=element.id%>).removeClass("notRead");
-        $("#linkToRead").text("Marqué comme non lu");
+  loadFluxes();
+  });
 
-        }
-     
-    <% end %>
-  <% end %>
+  function changeStatus(id) {
+    $.ajax({
+        type: 'put',
+        url: "/change",
+        data: { element_id: id }
+      }).done(function(a) {
+        loadFluxes();
+        console.log(a)
+      });
+  }
+
+
+  function refresh(){
+    $.ajax({
+        url: "/refresh",
+      }).done(function() {
+
+      });
+  }
+
+
+  function loadFluxes(){
+    $('#content').empty();
+    $.ajax({
+    url: "/content"
+  }).done(function(fluxes) {
+    
+    for(let i=0; i < fluxes.length; i++){
+      
+      let flux = fluxes[i]
+      document.getElementById('content').innerHTML += "<div class='col-4' >" +
+      "<p>"+flux.title+"</p>" +
+      "<div id='element"+flux.id+"' class='flux'>" +
+      "</div>" +
+   "</div>";
+
+    for(let x=0; x < flux.elements.length; x++){
+      let element = flux.elements[x]
+      let date = new Date(element.date)
+      let lien = "<a id='linkToRead"+element.id+"' data-remote='true' href='#' onClick='changeStatus("+element.id+");changeCSS("+element.id+","+element.status+")'>a</a>"
   
-});
+    document.getElementById('element'+ flux.id).innerHTML += "<div id='article_"+element.id+"' class='notRead element'>" +
+         "<div class='headFlux'>" +
+            "<div>" +
+            "<a href='"+element.url+"'><p><strong>"+element.title+"</strong></p></a>" +
+            "</div>" +
+            "<div>" +
+             " <small>" +
+                "<p>"+date.toLocaleString()+"</p>" +
+             " </small>" +
+            "</div>" +
+         " </div>" +
+            "<p>"+element.resum+"</p>" +
+            "<p id='lien_"+element.id+"'></p>" +
+        "</div>" +
+        "<hr>"
+      document.getElementById('lien_'+element.id).innerHTML = lien
+      
+      if( element.status == true ){
+        $("#article_"+element.id).removeClass("notRead");
+        $("#linkToRead"+ element.id).text("Marqué comme non lu");
+        }else{
+        $("#linkToRead"+element.id).text("Marqué comme lu");
+        }
+    }
+    }
+  });
+    
+  }
+  
 </script>
+

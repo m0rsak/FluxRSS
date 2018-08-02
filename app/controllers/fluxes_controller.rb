@@ -6,19 +6,18 @@ class FluxesController < ApplicationController
   
   def index
     @flux = Flux.new 
-    @fluxes = Flux.includes(:elements).all
-    
   end 
   
+  def content
+    @fluxes = Flux.includes(:elements)
+    render json: @fluxes.to_json(:include => :elements)
+  end
   
   def create
     @flux = Flux.new
     @element = Element.new
     rss_results = []
     
-    if @flux.update(flux_params)
-      
-      
       rss = RSS::Parser.parse(open(flux_params[:url]).read, false).items[0..5]
       rss.each do |result|
         result = { title: result.title, date: result.pubDate, link: result.link, description: result.description }
@@ -33,9 +32,6 @@ class FluxesController < ApplicationController
       end
       
       redirect_to root_path
-    else
-      render :index
-    end
   end
   
   

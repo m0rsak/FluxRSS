@@ -4,10 +4,12 @@ class ElementsController < ApplicationController
         @element = Element.find(params[:element_id])
         @element.toggle(:status).save
        
-        return @element
+        render json: @element
+
     end
 
-
-
+    def refreshElement
+        @element = Element.all
+    end
 
 end

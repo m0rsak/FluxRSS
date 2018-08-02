@@ -2,7 +2,13 @@ Rails.application.routes.draw do
 
   root 'fluxes#index'
 
+  get '/content', to: 'fluxes#content'
+
+  put '/change', to: 'elements#changeStatus'
+  get '/refresh', to: 'elements#refreshElement'
+
   resources :fluxes
+  
   
   resources :elements do
     put :changeStatus

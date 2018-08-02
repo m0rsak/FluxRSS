@@ -1,17 +1,9 @@
-
-
-
-
-function changeStatus(id,str) {
- 
+function changeCSS(id,str) {
   if (str == false){
-    $("#element_"+id).removeClass("notRead");
-    $("#linkToRead").text("Marqué comme non lu");
+    $("#article_"+id).removeClass("notRead");
   }else{
-    $("#element_"+id).addClass("notRead");
-    $("#linkToRead").text("Marqué comme lu");
+    $("#article_"+id).addClass("notRead");
   }
-
-  
-  
 }
+
+
