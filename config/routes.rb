@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get '/content', to: 'fluxes#content'
 
   put '/change', to: 'elements#changeStatus'
-  get '/refresh', to: 'elements#refreshElement'
+  get '/refresh', to: 'elements#refreshElements'
 
   resources :fluxes
   

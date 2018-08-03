@@ -5,11 +5,22 @@ body{
     width: 100%
 }
 
+.blocFlux{
+    border: solid 2px black;
+    
+    padding: 0 !important;
+    margin: 20px
+}
+
+.titleFlux{
+    height: 50px;
+    text-align: center;
+    border: solid 1px black; 
+}
+
 .flux {
-    border: solid 1px black;
     overflow: auto; 
     height: 500px;
-    padding: 10px
 }
 
 .headFlux{
@@ -19,10 +30,26 @@ body{
 }
 
 .element{
-    min-height: 50%;
+    min-height: 30%;
+    border: solid 1px black;
+    margin: 10px;
+    padding: 10px
+    
 }
 
+.link{
+    text-align: right;
+}
+
+.footerFlux{
+    border: solid 1px black;
+    height: 30px;
+}
 
 .notRead{
     background-color: lightgray;
+}
+
+#new_flux{
+    margin-top: 50px;
 }

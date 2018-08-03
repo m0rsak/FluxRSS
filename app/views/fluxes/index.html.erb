@@ -1,4 +1,4 @@
-<%= form_for @flux do |f| %>
+<%= form_for @flux do |f| %> <%# Formulaire d'enregistrment d'un nouveau flux rss %>
 <div class="col-8 offset-4" style='margin-bottom:50px'>
   <div class='form_group'>
     <%= f.text_field :title, class: 'form-control', placeholder: 'Titre du Flux' %>
@@ -13,52 +13,58 @@
 </div>
 <% end %>
 
-<button id="refresh" type="btn btn-primary">Rafraichir</button>
 
+<%# Ici ce trouve la div qui sera remplis avec les éléments de BDD %>
 <div class="container-fluid">
+  <button id="refresh" type="button" class="btn btn-primary">Rafraichir les flux</button> 
   <div id="content" class="row">
+  
   </div>
 </div>
 
 <script>
+
 $(document).ready(function() {
   loadFluxes();
+  setInterval(function(){ refresh() ; }, 60000);
   });
+
+
 
   function changeStatus(id) {
     $.ajax({
         type: 'put',
         url: "/change",
         data: { element_id: id }
-      }).done(function(a) {
+      }).done(function() {
         loadFluxes();
-        console.log(a)
       });
-  }
+  };
 
-
+  $('#refresh').on("click", refresh );
   function refresh(){
     $.ajax({
         url: "/refresh",
       }).done(function() {
-
+        loadFluxes();
       });
   }
 
 
   function loadFluxes(){
-    $('#content').empty();
+    
     $.ajax({
     url: "/content"
   }).done(function(fluxes) {
-    
+    $('#content').empty();
     for(let i=0; i < fluxes.length; i++){
       
       let flux = fluxes[i]
-      document.getElementById('content').innerHTML += "<div class='col-4' >" +
-      "<p>"+flux.title+"</p>" +
+      document.getElementById('content').innerHTML += "<div class='col-lg-5 col-sm-12 blocFlux' >" +
+      "<div class='titleFlux'>"+flux.title+"</div>" +
       "<div id='element"+flux.id+"' class='flux'>" +
       "</div>" +
+      "<div class='footerFlux'></div>" +
    "</div>";
 
     for(let x=0; x < flux.elements.length; x++){
@@ -78,10 +84,10 @@ $(document).ready(function() {
             "</div>" +
          " </div>" +
             "<p>"+element.resum+"</p>" +
-            "<p id='lien_"+element.id+"'></p>" +
+            "<p id='link_"+element.id+"' class='link'></p>" +
         "</div>" +
         "<hr>"
-      document.getElementById('lien_'+element.id).innerHTML = lien
+      document.getElementById('link_'+element.id).innerHTML = lien
       
       if( element.status == true ){
         $("#article_"+element.id).removeClass("notRead");
